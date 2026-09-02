@@ -1,0 +1,73 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: #F5F5F5;
+  color: #111827;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+}
+
+.MuiCard-root,
+.MuiPaper-root,
+.MuiBox-root,
+.MuiStack-root {
+  min-width: 0;
+}
+
+@media (max-width: 900px) {
+  .MuiDialog-paper {
+    margin: 12px !important;
+    width: calc(100% - 24px) !important;
+    max-height: calc(100% - 24px) !important;
+  }
+
+  .MuiTablePagination-root .MuiToolbar-root {
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    min-height: auto;
+    padding: 10px 12px;
+  }
+}
+
+/* Remove Leaflet default tooltip background */
+.leaflet-tooltip {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.leaflet-tooltip-top:before,
+.leaflet-tooltip-bottom:before,
+.leaflet-tooltip-left:before,
+.leaflet-tooltip-right:before {
+  display: none !important;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset;
+  -webkit-text-fill-color: #111827;
+  caret-color: #111827;
+}
