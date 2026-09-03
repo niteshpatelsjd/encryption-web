@@ -470,6 +470,8 @@ const navItems = moduleList
   const handleNavClick = (to) => {
     setNavigating(true)
 
+    setMobileOpen(false)
+
     navigate(to)
 
     requestAnimationFrame(scrollToPageTop)

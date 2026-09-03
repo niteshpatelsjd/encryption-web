@@ -36,6 +36,7 @@ import BlockIcon from '@mui/icons-material/Block'
 import DevicesIcon from '@mui/icons-material/Devices'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
+import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 
 import toast from 'react-hot-toast'
 import { Link } from 'react-router-dom'
@@ -113,6 +114,17 @@ const statIconStyle = {
 
 function getUserId(user) {
   return user?.id || user?._id || user?.userId || ''
+}
+
+async function copyUserId(userId) {
+  if (!userId) return
+
+  try {
+    await navigator.clipboard.writeText(userId)
+    toast.success('User ID copied')
+  } catch {
+    toast.error('Unable to copy User ID')
+  }
 }
 
 function getStatusMeta(status) {
@@ -839,9 +851,34 @@ export default function UserPage() {
               <Typography sx={{ fontSize: 13, fontWeight: 900, color: '#111827' }}>
                 {name || '-'}
               </Typography>
-              <Typography sx={{ fontSize: 11, color: '#64748B' }}>
-                ID: {getUserId(r) || '-'}
-              </Typography>
+              <Stack direction="row" spacing={0.4} alignItems="center">
+                <Typography sx={{ fontSize: 11, color: '#64748B' }}>
+                  ID: {getUserId(r) || '-'}
+                </Typography>
+                {getUserId(r) && (
+                  <Tooltip title="Copy User ID">
+                    <IconButton
+                      size="small"
+                      aria-label="Copy User ID"
+                      onClick={(event) => {
+                        event.stopPropagation()
+                        copyUserId(getUserId(r))
+                      }}
+                      sx={{
+                        width: 22,
+                        height: 22,
+                        color: '#64748B',
+                        '&:hover': {
+                          color: primary,
+                          bgcolor: 'rgba(122,30,30,0.08)',
+                        },
+                      }}
+                    >
+                      <ContentCopyIcon sx={{ fontSize: 13 }} />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </Stack>
             </Box>
           </Stack>
         )
@@ -996,9 +1033,9 @@ export default function UserPage() {
   return (
     <Box>
       <Stack
-        direction="row"
-        justifyContent="flex-start"
-        alignItems="center"
+        direction={{ xs: 'column', sm: 'row' }}
+        justifyContent="space-between"
+        alignItems={{ xs: 'stretch', sm: 'center' }}
         spacing={2}
         sx={{
           mb: 3,
@@ -1022,10 +1059,12 @@ export default function UserPage() {
           variant="contained"
           startIcon={<VerifiedUserIcon />}
           sx={{
-            position: 'absolute',
-            top: '50%',
-            right: 0,
-            transform: 'translateY(-50%)',
+            position: { xs: 'static', sm: 'absolute' },
+            top: { sm: '50%' },
+            right: { sm: 0 },
+            transform: { sm: 'translateY(-50%)' },
+            alignSelf: { xs: 'flex-end', sm: 'auto' },
+            width: { xs: '100%', sm: 'auto' },
             flexShrink: 0,
             bgcolor: '#111827',
             borderRadius: 3,

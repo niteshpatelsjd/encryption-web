@@ -128,12 +128,12 @@ export default function MobileUserDevicePage() {
   return (
     <Box>
       <Stack
-        direction="row"
-        alignItems="center"
+        direction={{ xs: 'column', sm: 'row' }}
+        alignItems={{ xs: 'stretch', sm: 'center' }}
         justifyContent="flex-start"
         spacing={2}
         sx={{
-          mb: 3,
+          mb: 1.5,
           width: '100%',
           minHeight: 58,
           position: 'relative',
@@ -153,10 +153,12 @@ export default function MobileUserDevicePage() {
           to="/mobile-users"
           startIcon={<ArrowBackIcon />}
           sx={{
-            position: 'absolute',
-            top: '50%',
-            right: 0,
-            transform: 'translateY(-50%)',
+            position: { xs: 'static', sm: 'absolute' },
+            top: { sm: '50%' },
+            right: { sm: 0 },
+            transform: { sm: 'translateY(-50%)' },
+            alignSelf: { xs: 'flex-end', sm: 'auto' },
+            width: { xs: '100%', sm: 'auto' },
             color: '#111827',
             fontWeight: 800,
             flexShrink: 0,
@@ -166,10 +168,15 @@ export default function MobileUserDevicePage() {
         </Button>
       </Stack>
 
-      <Alert severity="info" sx={{ mb: 3, borderRadius: 3 }}>
-        Each newly generated activation code revokes any previous active code for
-        the same user. The mobile app uses this code to activate and register its
-        Android or iOS device.
+      <Alert
+        severity="info"
+        sx={{
+          mb: 3,
+          borderRadius: 3,
+          '& .MuiAlert-message': { fontSize: 12 },
+        }}
+      >
+        A new activation code replaces the previous one and registers an Android or iOS device.
       </Alert>
 
       <Box
@@ -181,7 +188,7 @@ export default function MobileUserDevicePage() {
         }}
       >
         <Card sx={{ borderRadius: 4, border: '1px solid #E5E7EB' }}>
-          <CardContent sx={{ p: { xs: 2.5, md: 3.5 } }}>
+          <CardContent sx={{ p: { xs: 2, md: 2.5 } }}>
             <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
               <Box
                 sx={{
@@ -209,6 +216,7 @@ export default function MobileUserDevicePage() {
             <Box component="form" onSubmit={createMobileUser}>
               <Stack spacing={2}>
                 <TextField
+                  size="small"
                   label="Full Name"
                   value={form.name}
                   onChange={updateForm('name')}
@@ -217,6 +225,7 @@ export default function MobileUserDevicePage() {
                   sx={fieldSx}
                 />
                 <TextField
+                  size="small"
                   label="Email Address"
                   type="email"
                   value={form.email}
@@ -227,12 +236,14 @@ export default function MobileUserDevicePage() {
                 />
                 <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
                   <TextField
+                    size="small"
                     label="Country Code"
                     value={form.countryCode}
                     onChange={updateForm('countryCode')}
                     sx={{ ...fieldSx, width: { xs: '100%', sm: 150 } }}
                   />
                   <TextField
+                    size="small"
                     label="Mobile Number"
                     value={form.mobileNumber}
                     onChange={updateForm('mobileNumber')}
@@ -282,8 +293,8 @@ export default function MobileUserDevicePage() {
         </Card>
 
         <Card sx={{ borderRadius: 4, border: '1px solid #E5E7EB' }}>
-          <CardContent sx={{ p: { xs: 2.5, md: 3.5 } }}>
-            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3 }}>
+          <CardContent sx={{ p: { xs: 2, md: 2.25 } }}>
+            <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 2 }}>
               <Box
                 sx={{
                   width: 46,
@@ -308,6 +319,7 @@ export default function MobileUserDevicePage() {
             </Stack>
 
             <TextField
+              size="small"
               label="Mobile User ID"
               value={userId}
               onChange={(event) => {
@@ -344,8 +356,8 @@ export default function MobileUserDevicePage() {
             </Button>
 
             {activation && (
-              <Box sx={{ mt: 3 }}>
-                <Divider sx={{ mb: 3 }} />
+              <Box sx={{ mt: 2 }}>
+                <Divider sx={{ mb: 2 }} />
                 <Stack
                   direction="row"
                   justifyContent="space-between"
@@ -364,14 +376,14 @@ export default function MobileUserDevicePage() {
                 </Stack>
                 <Box
                   sx={{
-                    p: 2,
+                    p: 1.5,
                     borderRadius: 3,
                     bgcolor: '#111827',
                     color: '#FFFFFF',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'flex-start',
-                    gap: 1.25,
+                    gap: 0.8,
                   }}
                 >
                   <Typography sx={{ fontFamily: 'monospace', fontSize: 15, fontWeight: 900, wordBreak: 'break-all' }}>
@@ -403,7 +415,7 @@ export default function MobileUserDevicePage() {
                     Copy
                   </Button>
                 </Box>
-                <Typography sx={{ mt: 1.5, color: '#64748B', fontSize: 12 }}>
+                <Typography sx={{ mt: 1, color: '#64748B', fontSize: 12 }}>
                   Expires: {formatDate(activation.expiresAt)}
                 </Typography>
               </Box>
