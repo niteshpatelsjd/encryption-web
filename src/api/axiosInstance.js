@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || 'https://encryption-api-b67f.onrender.com/api/v1/'
+  import.meta.env.VITE_API_BASE_URL || 'https://api.highestencryptionphone.com/api/v1/'
 
 export const publicApi = axios.create({
   baseURL: API_BASE_URL,
