@@ -3,7 +3,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   Box, Button, TextField, Dialog, DialogTitle, DialogContent, DialogActions,
   Chip, IconButton, Tooltip, MenuItem, Avatar, Typography, Divider,
-  InputAdornment, Stack, Card, CardContent, Select, FormControl, InputLabel,
+  InputAdornment, Stack, Card, CardContent, Select,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
@@ -24,7 +24,13 @@ import DataTable from '../../components/common/DataTable'
 
 // ─── API helpers ────────────────────────────────────────────────────────────
 const getUsers = (params) =>
-  api.get('/user/getAllUser', { params }).then((r) => r.data.responseBody)
+  api.get('/user/getAllUser', { params }).then((response) => {
+    if (response?.data?.responseCode !== 200) {
+      throw new Error(response?.data?.message || 'Failed to fetch staff users')
+    }
+
+    return response.data.responseBody
+  })
 
 const getRoles = () =>
   api.get('/role/getAllRole', { params: { pageIndex: 0, pageSize: 100 } })
@@ -143,56 +149,6 @@ function StatCard({
 }
 
 // ─── View Dialog ─────────────────────────────────────────────────────────────
-function InfoRow({ label, value }) {
-  return (
-    <Box
-      sx={{
-        py: 1.8,
-        borderBottom: `1px solid ${theme.border}`,
-      }}
-    >
-      <Typography
-        sx={{
-          fontSize: 11,
-          fontWeight: 700,
-          color: theme.muted,
-          mb: 0.7,
-          textTransform: 'uppercase',
-          letterSpacing: '0.06em',
-        }}
-      >
-        {label}
-      </Typography>
-
-      <Box
-        sx={{
-          bgcolor: theme.surface,
-          border: `1px solid ${theme.border}`,
-          borderRadius: 2,
-          px: 1.5,
-          py: 1.3,
-          minHeight: 42,
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        <Typography
-          sx={{
-            fontSize: 14,
-            fontWeight: 500,
-            color: '#1E1E1E',
-            wordBreak: 'break-word',
-            lineHeight: 1.5,
-          }}
-        >
-          {value || '—'}
-        </Typography>
-      </Box>
-    </Box>
-  )
-}
-
-
 // ─── View Dialog ─────────────────────────────────────────────────────────────
 function InfoField({ label, value }) {
   return (
@@ -953,7 +909,7 @@ export default function StaffUserPage() {
 
   // ── Queries ──
   const { data, isFetching } = useQuery({
-    queryKey: ['users', page, pageSize, search, statusFilter],
+    queryKey: ['staff-users', page, pageSize, search, statusFilter],
     queryFn: () => getUsers({ pageIndex: page, pageSize, searchText: search || undefined, status: statusFilter || undefined }),
   })
 
@@ -968,7 +924,7 @@ export default function StaffUserPage() {
   const blockMutation = useMutation({
     mutationFn: ({ id, status }) => api.post('/user/blockUnblock', { id, status, remark: status === 1 ? 'Activated by admin' : 'Blocked by admin' }),
     onSuccess: (_, vars) => {
-      qc.invalidateQueries({ queryKey: ['users'] })
+      qc.invalidateQueries({ queryKey: ['staff-users'] })
       toast.success(vars.status === 1 ? 'User activated' : 'User blocked')
       setConfirmUser(null)
     },
@@ -998,7 +954,7 @@ export default function StaffUserPage() {
     {
       key: 'role', label: 'Role',
       render: (r) => {
-        const role = roles.find((rl) => rl.id === r.roleId)
+        const role = r.roleResponse || roles.find((rl) => rl.id === r.roleId)
         return role
           ? <Chip label={role.roleName} size="small" sx={{ bgcolor: 'rgba(227,30,36,0.1)', color: '#E31E24', border: '1px solid rgba(227,30,36,0.2)', fontSize: 11, height: 20 }} />
           : <Typography fontSize={11} color="#6B7280">—</Typography>
@@ -1193,7 +1149,7 @@ return (
           onClose={() => { setFormOpen(false); setEditing(null) }}
           editing={editing}
           roles={roles}
-          onSaved={() => { setFormOpen(false); setEditing(null); qc.invalidateQueries({ queryKey: ['users'] }) }}
+          onSaved={() => { setFormOpen(false); setEditing(null); qc.invalidateQueries({ queryKey: ['staff-users'] }) }}
         />
       )}
 
